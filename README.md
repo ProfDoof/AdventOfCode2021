@@ -8,5 +8,5 @@ solutions for that day.
 ## Goals for this Advent of Code
 
 - [ ] Utilize Unsafe C#
-- [ ] Utilize the Unchecked context in C#
+- [x] Utilize the Unchecked context in C#
 
