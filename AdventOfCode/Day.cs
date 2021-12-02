@@ -12,19 +12,19 @@ public interface IDay
     public void Problem2();
 }
 
-public abstract class Day<TInputType> : IDay
+public abstract class Day<TInput> : IDay
 {
-    public abstract Task<Day<TInputType>> InitializeAsync();
-    
+    public abstract Task<Day<TInput>> InitializeAsync();
+
     [MemberNotNull(nameof(Inputs))]
-    protected async Task<Day<TInputType>> InitializeAsync(Func<string, TInputType> parseFunc)
+    protected async Task<Day<TInput>> InitializeAsync(Func<string, TInput> parseFunc)
     {
         await using FileStream inputFileStream =
             new($"./Inputs/day{this.DayOfMonth}input.txt", FileMode.Open, FileAccess.Read);
         using StreamReader inputFileReader = new(inputFileStream);
         string contents = await inputFileReader.ReadToEndAsync();
         string[] allInputs = contents.Trim().Split('\n');
-        this.Inputs = new TInputType[allInputs.Length];
+        this.Inputs = new TInput[allInputs.Length];
         int count = 0;
         foreach (string input in allInputs)
         {
@@ -36,8 +36,9 @@ public abstract class Day<TInputType> : IDay
     }
     
     
-    protected TInputType[]? Inputs;
+    protected TInput[]? Inputs;
     public abstract int DayOfMonth { get; }
     public abstract void Problem1();
     public abstract void Problem2();
 }
+
