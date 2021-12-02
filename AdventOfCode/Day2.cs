@@ -31,57 +31,41 @@ public struct SubmarinePosition
     }
 }
 
-public class Day2 : IDay
+public class Day2 : Day<SubmarineCommand>
 {
-    public int Day => 2;
+    public override int DayOfMonth => 2;
 
-    private SubmarineCommand[] inputs;
-
-    private Day2(SubmarineCommand[] inputs)
+    public override Task<Day<SubmarineCommand>> InitializeAsync()
     {
-        this.inputs = inputs;
-    }
-    
-    public static async Task<Day2> InitializeAsync()
-    {
-        await using FileStream inputFileStream = new("./Inputs/day2input.txt", FileMode.Open);
-        using StreamReader inputFileReader = new(inputFileStream);
-        string input = await inputFileReader.ReadToEndAsync();
-        string[] allInputs = input.Trim().Split('\n');
-        SubmarineCommand[] inputs = new SubmarineCommand[allInputs.Count()];
-        int count = 0;
-        foreach (string str in allInputs)
+        return this.InitializeAsync(input =>
         {
-            string[] command = str.Trim().Split();
-            inputs[count] = new SubmarineCommand
+            string[] command = input.Trim().Split();
+            return new SubmarineCommand
             {
                 Direction = Enum.Parse<Direction>(command[0], true),
                 Amount = uint.Parse(command[1]),
             };
-            count++;
-        }
-        
-        return new Day2(inputs);
+        });
     }
-    public void Problem1()
+    public override void Problem1()
     {
         SubmarinePosition currentPosition = new SubmarinePosition
         {
             Depth = 0,
             HorizontalPosition = 0,
         };
-        for (int i = 0; i < inputs.Length; i++)
+        for (int i = 0; i < Inputs.Length; i++)
         {
-            switch (inputs[i].Direction)
+            switch (Inputs[i].Direction)
             {
                 case Direction.Forward:
-                    currentPosition.HorizontalPosition += (int)inputs[i].Amount;
+                    currentPosition.HorizontalPosition += (int)Inputs[i].Amount;
                     break;
                 case Direction.Down:
-                    currentPosition.Depth += (int) inputs[i].Amount;
+                    currentPosition.Depth += (int) Inputs[i].Amount;
                     break;
                 case Direction.Up:
-                    currentPosition.Depth -= (int) inputs[i].Amount;
+                    currentPosition.Depth -= (int) Inputs[i].Amount;
                     break;
                 default:
                     throw new Exception("Something done went wrong");
@@ -92,26 +76,26 @@ public class Day2 : IDay
         Console.WriteLine($"Final Answer: {currentPosition.Depth * currentPosition.HorizontalPosition}");
     }
 
-    public void Problem2()
+    public override void Problem2()
     {
         SubmarinePosition currentPosition = new SubmarinePosition
         {
             Depth = 0,
             HorizontalPosition = 0,
         };
-        for (int i = 0; i < inputs.Length; i++)
+        for (int i = 0; i < Inputs.Length; i++)
         {
-            switch (inputs[i].Direction)
+            switch (Inputs[i].Direction)
             {
                 case Direction.Forward:
-                    currentPosition.HorizontalPosition += (int)inputs[i].Amount;
-                    currentPosition.Depth += currentPosition.Aim * (int) inputs[i].Amount;
+                    currentPosition.HorizontalPosition += (int)Inputs[i].Amount;
+                    currentPosition.Depth += currentPosition.Aim * (int) Inputs[i].Amount;
                     break;
                 case Direction.Down:
-                    currentPosition.Aim += (int) inputs[i].Amount;
+                    currentPosition.Aim += (int) Inputs[i].Amount;
                     break;
                 case Direction.Up:
-                    currentPosition.Aim -= (int) inputs[i].Amount;
+                    currentPosition.Aim -= (int) Inputs[i].Amount;
                     break;
                 default:
                     throw new Exception("Something done went wrong");

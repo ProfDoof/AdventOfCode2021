@@ -5,7 +5,7 @@ using AdventOfCode;
 
 static void PrintDaysSolutions(IDay dayObject)
 {
-    Console.WriteLine($"Here are my solutions to Day {dayObject.Day}:");
+    Console.WriteLine($"Here are my solutions to Day {dayObject.DayOfMonth}:");
     Console.WriteLine("=============================================================");
     Console.WriteLine("Problem 1 Solution:");
     Console.WriteLine("-------------------------------------------------------------");
@@ -18,4 +18,4 @@ static void PrintDaysSolutions(IDay dayObject)
     Console.WriteLine("=============================================================");
 }
 
-PrintDaysSolutions(await Day2.InitializeAsync());
+PrintDaysSolutions(await new Day1().InitializeAsync());
