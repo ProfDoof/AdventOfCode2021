@@ -18,4 +18,4 @@ static void PrintDaysSolutions(IDay dayObject)
     Console.WriteLine("=============================================================");
 }
 
-PrintDaysSolutions(await new Day2().InitializeAsync());
+PrintDaysSolutions(new Day3());

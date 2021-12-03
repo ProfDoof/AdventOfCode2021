@@ -1,21 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace AdventOfCode;
 
 public class Day1 : Day<int>
 {
-    public override Task<Day<int>> InitializeAsync()
-    {
-        return this.InitializeAsync(int.Parse);
-    }
-
-    public override int DayOfMonth => 1;
+    public Day1() : base(1, int.Parse) { }
 
     public override void Problem1()
     {

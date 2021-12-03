@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AdventOfCode;
 
@@ -33,20 +29,16 @@ public struct SubmarinePosition
 
 public class Day2 : Day<SubmarineCommand>
 {
-    public override int DayOfMonth => 2;
-
-    public override Task<Day<SubmarineCommand>> InitializeAsync()
+    public Day2() : base(2, input =>
     {
-        return this.InitializeAsync(input =>
+        string[] command = input.Trim().Split();
+        return new SubmarineCommand
         {
-            string[] command = input.Trim().Split();
-            return new SubmarineCommand
-            {
-                Direction = Enum.Parse<Direction>(command[0], true),
-                Amount = uint.Parse(command[1]),
-            };
-        });
-    }
+            Direction = Enum.Parse<Direction>(command[0], true),
+            Amount = uint.Parse(command[1]),
+        };
+    }) { }
+    
     public override void Problem1()
     {
         SubmarinePosition currentPosition = new SubmarinePosition

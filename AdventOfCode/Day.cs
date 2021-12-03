@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace AdventOfCode;
 
@@ -14,15 +12,13 @@ public interface IDay
 
 public abstract class Day<TInput> : IDay
 {
-    public abstract Task<Day<TInput>> InitializeAsync();
-
-    [MemberNotNull(nameof(Inputs))]
-    protected async Task<Day<TInput>> InitializeAsync(Func<string, TInput> parseFunc)
+    protected Day(int dayOfMonth, Func<string, TInput> parseFunc)
     {
-        await using FileStream inputFileStream =
+        this.DayOfMonth = dayOfMonth;
+        using FileStream inputFileStream =
             new($"./Inputs/day{this.DayOfMonth}input.txt", FileMode.Open, FileAccess.Read);
         using StreamReader inputFileReader = new(inputFileStream);
-        string contents = await inputFileReader.ReadToEndAsync();
+        string contents = inputFileReader.ReadToEnd();
         string[] allInputs = contents.Trim().Split('\n');
         this.Inputs = new TInput[allInputs.Length];
         int count = 0;
@@ -31,13 +27,11 @@ public abstract class Day<TInput> : IDay
             this.Inputs[count] = parseFunc(input);
             count++;
         }
-
-        return this;
     }
     
     
-    protected TInput[]? Inputs;
-    public abstract int DayOfMonth { get; }
+    protected readonly TInput[] Inputs;
+    public int DayOfMonth { get; }
     public abstract void Problem1();
     public abstract void Problem2();
 }
