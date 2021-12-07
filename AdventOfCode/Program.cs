@@ -18,4 +18,4 @@ static void PrintDaysSolutions(IDay dayObject)
     Console.WriteLine("=============================================================");
 }
 
-PrintDaysSolutions(new Day4());
+PrintDaysSolutions(new Day5());
