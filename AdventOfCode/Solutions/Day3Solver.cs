@@ -1,20 +1,34 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Solutions;
 
-
-public class Day3 : Day<ushort>
+public struct Day3Input
 {
-    public Day3() : base(3, input => Convert.ToUInt16(input, 2))
+    public List<ushort> Inputs;
+}
+
+public class Day3Solver : AdventOfCodeSolver<Day3Input>
+{
+    public Day3Solver() : base(3)
     {
     }
 
-    public override void Problem1()
+    protected override async Task InitializeInputAsync(StreamReader inputReader)
+    {
+        this.Input = new Day3Input
+        {
+            Inputs = await AdventOfCodeSolverHelper.ParseEachLineAsync(inputReader, input => Convert.ToUInt16(input, 2)),
+        };
+    }
+
+    public override Task SolveProblemOneAsync()
     {
         int[] countOnes = new int[12];
-        foreach (ushort t in this.Inputs)
+        foreach (ushort t in this.Input.Inputs)
         {
             for (int j = 0; j < countOnes.Length; j++)
             {
@@ -25,7 +39,7 @@ public class Day3 : Day<ushort>
         Console.WriteLine(string.Join(" ", countOnes));
         uint gamma = 0;
         uint epsilon = 0;
-        int midlength = this.Inputs.Length / 2;
+        int midlength = this.Input.Inputs.Count / 2;
         for (int i = countOnes.Length - 1; i >= 0; i--)
         {
             gamma <<= 1;
@@ -37,14 +51,15 @@ public class Day3 : Day<ushort>
         Console.WriteLine($"Gamma: {gamma}");
         Console.WriteLine($"Epsilon: {epsilon}");
         Console.WriteLine($"Final Answer: {gamma * epsilon}");
+        return Task.CompletedTask;
     }
 
-    public override void Problem2()
+    public override Task SolveProblemTwoAsync()
     {
         List<ushort> startWithOnes = new();
         List<ushort> startWithZeros = new();
-        ushort[] inputClone = new ushort[this.Inputs.Length];
-        this.Inputs.CopyTo(inputClone, 0);
+        ushort[] inputClone = new ushort[this.Input.Inputs.Count];
+        this.Input.Inputs.CopyTo(inputClone, 0);
         ushort mask = 1 << 11;
         while (inputClone.Length != 1)
         {
@@ -70,8 +85,8 @@ public class Day3 : Day<ushort>
 
         ushort oxygenGeneratorRating = inputClone.First();
         Console.WriteLine($"Oxygen Generator Rating: {oxygenGeneratorRating}");
-        inputClone = new ushort[this.Inputs.Length];
-        this.Inputs.CopyTo(inputClone, 0);
+        inputClone = new ushort[this.Input.Inputs.Count];
+        this.Input.Inputs.CopyTo(inputClone, 0);
         mask = 1 << 11;
         while (inputClone.Length != 1)
         {
@@ -98,5 +113,6 @@ public class Day3 : Day<ushort>
         ushort co2ScrubberRating = inputClone.First();
         Console.WriteLine($"CO2 Scrubber Rating: {co2ScrubberRating}");
         Console.WriteLine($"Life Support Rating: {oxygenGeneratorRating*co2ScrubberRating}");
+        return Task.CompletedTask;
     }
 }

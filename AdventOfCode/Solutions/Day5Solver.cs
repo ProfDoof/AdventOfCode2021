@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Solutions;
 
 public struct VentPoint : IEquatable<VentPoint>
 {
@@ -42,30 +44,48 @@ public struct VentLine
     public VentPoint End;
 }
 
-public class Day5 : Day<VentLine>
+public struct Day5Input
 {
-    public Day5() : base(5, input =>
-    {
-        string[][] splitInput = input
-            .Split("->", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-            .Select(s =>
-                s.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-            ).ToArray();
-        return new VentLine
-        {
-            Start = new VentPoint
-            {
-                X = int.Parse(splitInput[0][0]),
-                Y = int.Parse(splitInput[0][1]),
-            },
-            End = new VentPoint
-            {
-                X = int.Parse(splitInput[1][0]),
-                Y = int.Parse(splitInput[1][1]),
-            },
-        };
-    }) { }
+    public List<VentLine> VentLines;
+}
 
+public class Day5Solver : AdventOfCodeSolver<Day5Input>
+{
+    public Day5Solver() : base(5)
+    {
+    }
+
+    protected override async Task InitializeInputAsync(StreamReader inputReader)
+    {
+        this.Input = new Day5Input
+        {
+            VentLines = await AdventOfCodeSolverHelper.ParseEachLineAsync(
+                inputReader,
+                input =>
+                {
+                    string[][] splitInput = input
+                        .Split("->", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s =>
+                            s.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        ).ToArray();
+                    return new VentLine
+                    {
+                        Start = new VentPoint
+                        {
+                            X = int.Parse(splitInput[0][0]),
+                            Y = int.Parse(splitInput[0][1]),
+                        },
+                        End = new VentPoint
+                        {
+                            X = int.Parse(splitInput[1][0]),
+                            Y = int.Parse(splitInput[1][1]),
+                        },
+                    };
+                }
+            ),
+        };
+    }
+    
     private static void AddCoordinate(Dictionary<VentPoint, uint> coordinateCounts, int x, int y)
     {
         VentPoint key = new()
@@ -78,8 +98,8 @@ public class Day5 : Day<VentLine>
             value = 0;
         coordinateCounts[key] = value + 1;
     }
-
-    public static void AddLineCoordinates(VentLine line, Dictionary<VentPoint, uint> coordinateCount)
+    
+    private static void AddLineCoordinates(VentLine line, Dictionary<VentPoint, uint> coordinateCount)
     {
         int dx = Math.Abs(line.End.X - line.Start.X);
         int sx = line.Start.X < line.End.X ? 1 : -1;
@@ -109,26 +129,28 @@ public class Day5 : Day<VentLine>
             }
         }
     }
-    
-    public override void Problem1()
+
+    public override Task SolveProblemOneAsync()
     {
         Dictionary<VentPoint, uint> coordinateCount = new();
-        foreach (VentLine line in this.Inputs.Where(line => line.Start.X == line.End.X || line.Start.Y == line.End.Y))
+        foreach (VentLine line in this.Input.VentLines.Where(line => line.Start.X == line.End.X || line.Start.Y == line.End.Y))
         {
             AddLineCoordinates(line, coordinateCount);
         }
             
         Console.WriteLine($"Final Count: {coordinateCount.Count(kvp => kvp.Value > 1)}");
+        return Task.CompletedTask;
     }
 
-    public override void Problem2()
+    public override Task SolveProblemTwoAsync()
     {
         Dictionary<VentPoint, uint> coordinateCount = new();
-        foreach (VentLine line in this.Inputs)
+        foreach (VentLine line in this.Input.VentLines)
         {
             AddLineCoordinates(line, coordinateCount);
         }
             
         Console.WriteLine($"Final Count: {coordinateCount.Count(kvp => kvp.Value > 1)}");
+        return Task.CompletedTask;
     }
 }

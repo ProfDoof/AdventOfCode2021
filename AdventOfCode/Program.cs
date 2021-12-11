@@ -2,20 +2,14 @@
 
 using System;
 using AdventOfCode;
+using AdventOfCode.Solutions;
 
-static void PrintDaysSolutions(IDay dayObject)
-{
-    Console.WriteLine($"Here are my solutions to Day {dayObject.DayOfMonth}:");
-    Console.WriteLine("=============================================================");
-    Console.WriteLine("Problem 1 Solution:");
-    Console.WriteLine("-------------------------------------------------------------");
-    dayObject.Problem1();
-    Console.WriteLine("-------------------------------------------------------------");
-    Console.WriteLine("Problem 2 Solution:");
-    Console.WriteLine("-------------------------------------------------------------");
-    dayObject.Problem2();
-    Console.WriteLine("-------------------------------------------------------------");
-    Console.WriteLine("=============================================================");
-}
-
-PrintDaysSolutions(new Day6());
+await AdventOfCodeSolverHelper.RunSolver<Day8Solver>();
+// await AdventOfCodeSolverHelper.RunSolvers(
+//     typeof(Day1Solver), 
+//     typeof(Day2Solver), 
+//     typeof(Day3Solver), 
+//     typeof(Day4Solver),
+//     typeof(Day5Solver),
+//     typeof(Day6Solver)
+// );
