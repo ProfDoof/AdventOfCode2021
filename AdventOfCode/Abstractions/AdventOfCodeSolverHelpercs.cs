@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -26,6 +27,11 @@ public static class AdventOfCodeSolverHelper
 
     public static async Task RunSolvers(params Type[] types)
     {
+        await RunSolvers(types.ToList());
+    }
+
+    private static async Task RunSolvers(IEnumerable<Type> types)
+    {
         MethodInfo runSolverMethod = typeof(AdventOfCodeSolverHelper).GetMethod("RunSolver")!;
         foreach (Type type in types)
         {
@@ -39,6 +45,12 @@ public static class AdventOfCodeSolverHelper
                 Console.WriteLine($"The provided type {type} does not inherit from the AdventOfCodeAbstractSolver");
             }
         }
+    }
+
+    public static async Task RunAllSolvers(Assembly? assembly = null)
+    {
+        assembly ??= Assembly.GetExecutingAssembly();
+        await RunSolvers(assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(AdventOfCodeAbstractSolver)) && type != typeof(AdventOfCodeSolver<>)));
     }
 
     public static async Task<List<TInput>> ParseEachLineAsync<TInput>(StreamReader inputReader, Func<string, TInput> parserFunc)
