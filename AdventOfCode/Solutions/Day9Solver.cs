@@ -32,9 +32,10 @@ public struct Day9Input
 
 public class Day9Solver : AdventOfCodeSolver<Day9Input>
 {
-    private IEnumerable<HeightMapIndex> HeightMapIndices;
+    private IEnumerable<HeightMapIndex> _heightMapIndices;
     public Day9Solver() : base(9)
     {
+        this._heightMapIndices = Array.Empty<HeightMapIndex>();
     }
 
     protected override async Task InitializeInputAsync(StreamReader inputReader)
@@ -52,7 +53,7 @@ public class Day9Solver : AdventOfCodeSolver<Day9Input>
         }
 
         this.Input.HeightMap = new int[heatmap.Count, heatmap.First().Count];
-        this.HeightMapIndices = Enumerable
+        this._heightMapIndices = Enumerable
             .Range(0, heatmap.Count)
             .SelectMany(row => 
                 Enumerable
@@ -65,34 +66,27 @@ public class Day9Solver : AdventOfCodeSolver<Day9Input>
                         }
                     )
             );
-        foreach (HeightMapIndex index in this.HeightMapIndices)
+        foreach (HeightMapIndex index in this._heightMapIndices)
         {
             this.Input.HeightMap[index.Row, index.Column] = heatmap[index.Row][index.Column];
         }
     }
 
-    private IEnumerable<HeightMapIndex>? _lowestPoints = null;
+    private IEnumerable<HeightMapIndex>? _lowestPoints;
     private IEnumerable<HeightMapIndex> FindLowestPoints()
     {
         if (_lowestPoints is not null)
             return _lowestPoints;
 
-        List<HeightMapIndex> lowestPoints = new();
-        foreach (HeightMapIndex index in this.HeightMapIndices)
-        {
-            bool upIsHigher = index.Row == 0 
-                              || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row - 1, index.Column];
-            bool belowIsHigher = index.Row == this.Input.HeightMap.GetLength(0) - 1 
-                                 || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row + 1, index.Column];
-            bool leftIsHigher = index.Column == 0
-                                || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row, index.Column - 1];
-            bool rightIsHigher = index.Column == this.Input.HeightMap.GetLength(1) - 1
-                                 || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row, index.Column + 1];
-            if (upIsHigher && belowIsHigher && leftIsHigher && rightIsHigher)
-            {
-                lowestPoints.Add(index);
-            }
-        }
+        List<HeightMapIndex> lowestPoints = (
+            from index in this._heightMapIndices 
+            let upIsHigher = index.Row == 0 || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row - 1, index.Column] 
+            let belowIsHigher = index.Row == this.Input.HeightMap.GetLength(0) - 1 || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row + 1, index.Column] 
+            let leftIsHigher = index.Column == 0 || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row, index.Column - 1] 
+            let rightIsHigher = index.Column == this.Input.HeightMap.GetLength(1) - 1 || this.Input.HeightMap[index.Row, index.Column] < this.Input.HeightMap[index.Row, index.Column + 1] 
+            where upIsHigher && belowIsHigher && leftIsHigher && rightIsHigher 
+            select index
+        ).ToList();
 
         this._lowestPoints = lowestPoints;
         return this._lowestPoints;
