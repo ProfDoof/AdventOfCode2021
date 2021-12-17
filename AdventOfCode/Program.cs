@@ -4,7 +4,7 @@ using System;
 using AdventOfCode;
 using AdventOfCode.Solutions;
 
-// await AdventOfCodeSolverHelper.RunSolver<Day10Solver>();
+await AdventOfCodeSolverHelper.RunSolver<Day12Solver>();
 // await AdventOfCodeSolverHelper.RunSolvers(
 //     typeof(Day1Solver), 
 //     typeof(Day2Solver), 
@@ -13,4 +13,4 @@ using AdventOfCode.Solutions;
 //     typeof(Day5Solver),
 //     typeof(Day6Solver)
 // );
-await AdventOfCodeSolverHelper.RunAllSolvers();
+// await AdventOfCodeSolverHelper.RunAllSolvers();
