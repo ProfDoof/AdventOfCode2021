@@ -140,11 +140,12 @@ public class Day12Solver : AdventOfCodeSolver<Day12Input>
     }
 
     public override Task SolveProblemTwoAsync()
-    {Stack<(List<Cave> paths, bool smallTwice)> paths = new();
-        if (!this.Input.Caves.TryGetValue(new Cave("start"), out Cave start))
+    {
+        Stack<(List<Cave> paths, bool smallTwice)> paths = new();
+        if (!this.Input.Caves.TryGetValue(new Cave("start"), out Cave? start))
             throw new Exception("No start cave");
         
-        if (!this.Input.Caves.TryGetValue(new Cave("end"), out Cave end))
+        if (!this.Input.Caves.TryGetValue(new Cave("end"), out Cave? end))
             throw new Exception("No end cave");
         paths.Push((new List<Cave> {start}, false));
         List<List<Cave>> validPaths = new();
