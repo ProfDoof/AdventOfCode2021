@@ -1,4 +1,4 @@
-# Hooray
+# Advent of Code Solutions 2021
 
 Each solution will be typed up in a Day(number).cs file that contains 
 a class that inherits from IDay which can then be utilized in the 
